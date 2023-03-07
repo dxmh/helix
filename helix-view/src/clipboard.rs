@@ -138,6 +138,11 @@ pub fn get_clipboard_provider() -> Box<dyn ClipboardProvider> {
             paste => "tmux", "save-buffer", "-";
             copy => "tmux", "load-buffer", "-w", "-";
         }
+    } else if env_var_is_set("KITTY_WINDOW_ID") && binary_exists("kitty") {
+        command_provider! {
+            paste => "kitty", "+kitten", "clipboard", "--get-clipboard";
+            copy => "kitty", "+kitten", "clipboard";
+        }
     } else {
         Box::new(provider::FallbackProvider::new())
     }
